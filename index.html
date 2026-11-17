@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Bakery Studio">
+  <meta name="description" content="Your personal bakery recipe and costing studio">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Bakery Studio</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">B</div>
+        <div><div class="brand-name">Bakery Studio</div><div class="brand-sub" data-i18n="workspace">PERSONAL WORKSPACE</div></div>
+      </div>
+      <button class="icon-btn" id="langToggle" aria-label="Change language">TH / EN</button>
+    </header>
+
+    <main id="main">
+      <section class="page active" id="dashboardPage">
+        <div class="welcome">
+          <div>
+            <div class="eyebrow" data-i18n="overview">YOUR BAKERY, AT A GLANCE</div>
+            <h1 data-i18n="dashboard">Dashboard</h1>
+            <p class="muted" data-i18n="welcome">A little space for recipes, ideas and numbers.</p>
+          </div>
+          <div class="today-pill" id="todayLabel"></div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><span class="stat-icon lavender">▤</span><span class="stat-label" data-i18n="recipes">Recipes</span><strong id="recipeCount">0</strong><small data-i18n="savedRecipes">saved recipes</small></article>
+          <article class="stat-card"><span class="stat-icon mint">◈</span><span class="stat-label" data-i18n="ingredients">Ingredients</span><strong id="ingredientCount">0</strong><small data-i18n="inLibrary">in your library</small></article>
+          <article class="stat-card"><span class="stat-icon peach">◇</span><span class="stat-label" data-i18n="products">Products</span><strong id="productCount">0</strong><small data-i18n="pricedProducts">priced products</small></article>
+        </div>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="quickAccess">QUICK ACCESS</div><h2 data-i18n="getStarted">Get started</h2></div></div>
+        <div class="quick-grid">
+          <button class="quick-card" data-go="recipes"><span class="quick-icon lavender">＋</span><b data-i18n="addRecipe">Add a recipe</b><small data-i18n="recipeHint">Save your next bake</small></button>
+          <button class="quick-card" data-go="ingredients"><span class="quick-icon mint">＋</span><b data-i18n="addIngredient">Add ingredient</b><small data-i18n="ingredientHint">Keep prices up to date</small></button>
+          <button class="quick-card" data-go="costing"><span class="quick-icon peach">⌗</span><b data-i18n="calculateCost">Calculate cost</b><small data-i18n="costHint">Know your numbers</small></button>
+          <button class="quick-card" data-go="backup"><span class="quick-icon blue">↗</span><b data-i18n="backupData">Backup data</b><small data-i18n="backupHint">Keep a safe copy</small></button>
+        </div>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="recent">RECENTLY ADDED</div><h2 data-i18n="yourRecipes">Your recipes</h2></div><button class="text-btn" data-go="recipes" data-i18n="viewAll">View all →</button></div>
+        <div id="recentRecipes" class="stack-list empty-state"><div class="empty-emoji">🥐</div><b data-i18n="noRecipes">No recipes yet</b><span data-i18n="noRecipesHint">Add your first recipe to begin.</span></div>
+      </section>
+
+      <section class="page" id="recipesPage">
+        <div class="page-heading"><div><div class="eyebrow">YOUR COLLECTION</div><h1 data-i18n="recipes">Recipes</h1><p class="muted" data-i18n="recipesSub">Keep every bake in one place.</p></div><button class="primary-btn" id="newRecipeBtn">＋ <span data-i18n="newRecipe">New recipe</span></button></div>
+        <input class="search" id="recipeSearch" placeholder="Search recipes…" data-placeholder="searchRecipes">
+        <div id="recipeList" class="stack-list"></div>
+      </section>
+
+      <section class="page" id="ingredientsPage">
+        <div class="page-heading"><div><div class="eyebrow">PANTRY & PRICING</div><h1 data-i18n="ingredients">Ingredients</h1><p class="muted" data-i18n="ingredientsSub">Your ingredient price library.</p></div><button class="primary-btn" id="newIngredientBtn">＋ <span data-i18n="addNew">Add new</span></button></div>
+        <input class="search" id="ingredientSearch" placeholder="Search ingredients…" data-placeholder="searchIngredients">
+        <div id="ingredientList" class="stack-list"></div>
+      </section>
+
+      <section class="page" id="costingPage">
+        <div class="page-heading"><div><div class="eyebrow">RECIPE ECONOMICS</div><h1 data-i18n="costing">Cost calculator</h1><p class="muted" data-i18n="costingSub">Turn your recipe into clear numbers.</p></div></div>
+        <div class="panel">
+          <label data-i18n="chooseRecipe">Choose a recipe</label>
+          <select id="costRecipeSelect" class="field"><option value="">Select recipe…</option></select>
+          <div class="field-row"><div><label data-i18n="yield">Batch yield (pieces)</label><input id="costYield" class="field" type="number" min="1" step="1" value="1"></div><div><label data-i18n="targetMargin">Target margin (%)</label><input id="targetMargin" class="field" type="number" min="0" max="99" step="1" value="60"></div></div>
+          <div id="costBreakdown" class="cost-breakdown"><div class="empty-state compact"><div class="empty-emoji">⌗</div><span data-i18n="chooseRecipeHint">Choose a recipe to see its costing.</span></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="productsPage">
+        <div class="page-heading"><div><div class="eyebrow">YOUR MENU</div><h1 data-i18n="products">Products</h1><p class="muted" data-i18n="productsSub">Set prices and track margins.</p></div><button class="primary-btn" id="newProductBtn">＋ <span data-i18n="addNew">Add new</span></button></div>
+        <div id="productList" class="stack-list"></div>
+      </section>
+
+      <section class="page" id="backupPage">
+        <div class="page-heading"><div><div class="eyebrow">YOUR DATA, YOUR DEVICE</div><h1 data-i18n="settingsBackup">Settings & Backup</h1><p class="muted" data-i18n="backupSub">Your data stays in this browser on this device.</p></div></div>
+        <div class="panel backup-panel">
+          <div class="backup-symbol">⬡</div><h2 data-i18n="localStorage">Local storage</h2><p class="muted" data-i18n="localDesc">Recipes, ingredients and products are saved locally on this device. Export a backup regularly.</p>
+          <button class="primary-btn full" id="exportBtn" data-i18n="exportBackup">Export backup (.json)</button>
+          <label class="secondary-btn full file-label" for="importFile" data-i18n="importBackup">Import backup (.json)</label><input type="file" id="importFile" accept="application/json,.json" hidden>
+          <div class="notice" data-i18n="backupNotice">Important: clearing Safari website data or removing site data may erase local records. Keep a backup file somewhere safe.</div>
+          <div class="storage-line"><span data-i18n="recordsStored">Records stored</span><b id="recordTotal">0</b></div>
+          <button class="danger-btn full" id="clearDataBtn" data-i18n="clearData">Clear all app data</button>
+        </div>
+        <div class="panel"><h3 data-i18n="about">About this app</h3><p class="muted">Bakery Studio · Version 1.0</p><p class="muted" data-i18n="aboutDesc">A personal recipe book and bakery costing workspace.</p></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="dashboard"><span>⌂</span><small data-i18n="home">Home</small></button>
+      <button class="nav-item" data-page="recipes"><span>▤</span><small data-i18n="recipes">Recipes</small></button>
+      <button class="nav-item" data-page="ingredients"><span>◈</span><small data-i18n="ingredients">Ingredients</small></button>
+      <button class="nav-item" data-page="costing"><span>⌗</span><small data-i18n="costing">Costing</small></button>
+      <button class="nav-item" data-page="products"><span>◇</span><small data-i18n="products">Products</small></button>
+      <button class="nav-item" data-page="backup"><span>⚙</span><small data-i18n="more">More</small></button>
+    </nav>
+  </div>
+
+  <dialog id="recipeDialog" class="modal"><form id="recipeForm" method="dialog">
+    <div class="modal-head"><div><div class="eyebrow">RECIPE EDITOR</div><h2 id="recipeDialogTitle">New recipe</h2></div><button type="button" class="close-btn" data-close="recipeDialog">×</button></div>
+    <input type="hidden" id="recipeId">
+    <label data-i18n="recipeName">Recipe name</label><input id="recipeName" class="field" required placeholder="e.g. Levain Chocolate Chip Cookies">
+    <div class="field-row"><div><label data-i18n="category">Category</label><input id="recipeCategory" class="field" placeholder="Cookies"></div><div><label data-i18n="batchYield">Yield / pieces</label><input id="recipeYield" class="field" type="number" min="1" value="12" required></div></div>
+    <label data-i18n="ingredientsUsed">Ingredients</label><div id="recipeLines"></div>
+    <button type="button" class="secondary-btn full" id="addRecipeLine">＋ <span data-i18n="addIngredientLine">Add ingredient line</span></button>
+    <label data-i18n="methodNotes">Method & notes</label><textarea id="recipeNotes" class="field textarea" rows="3" placeholder="Mixing, resting, baking temperature…"></textarea>
+    <div class="modal-actions"><button type="button" class="secondary-btn" data-close="recipeDialog" data-i18n="cancel">Cancel</button><button type="submit" class="primary-btn" data-i18n="saveRecipe">Save recipe</button></div>
+  </form></dialog>
+
+  <dialog id="ingredientDialog" class="modal"><form id="ingredientForm" method="dialog">
+    <div class="modal-head"><div><div class="eyebrow">PANTRY EDITOR</div><h2 data-i18n="ingredientDetails">Ingredient details</h2></div><button type="button" class="close-btn" data-close="ingredientDialog">×</button></div>
+    <input type="hidden" id="ingredientId">
+    <label data-i18n="ingredientName">Ingredient name</label><input id="ingredientName" class="field" required placeholder="Unsalted butter">
+    <div class="field-row"><div><label data-i18n="purchasePrice">Purchase price (฿)</label><input id="ingredientPrice" class="field" type="number" min="0" step="0.01" required placeholder="250"></div><div><label data-i18n="purchaseQty">Pack quantity</label><input id="ingredientQty" class="field" type="number" min="0.001" step="any" required placeholder="500"></div></div>
+    <label data-i18n="unit">Unit</label><select id="ingredientUnit" class="field"><option value="g">g (gram)</option><option value="ml">ml (millilitre)</option><option value="pcs">pcs (piece)</option></select>
+    <div class="hint" id="unitCostHint">Unit cost: ฿0.00 / g</div>
+    <div class="modal-actions"><button type="button" class="secondary-btn" data-close="ingredientDialog" data-i18n="cancel">Cancel</button><button type="submit" class="primary-btn" data-i18n="saveIngredient">Save ingredient</button></div>
+  </form></dialog>
+
+  <dialog id="productDialog" class="modal"><form id="productForm" method="dialog">
+    <div class="modal-head"><div><div class="eyebrow">PRODUCT PRICING</div><h2 data-i18n="productDetails">Product details</h2></div><button type="button" class="close-btn" data-close="productDialog">×</button></div>
+    <input type="hidden" id="productId">
+    <label data-i18n="productName">Product name</label><input id="productName" class="field" required placeholder="Signature cookie">
+    <label data-i18n="linkedRecipe">Linked recipe</label><select id="productRecipe" class="field"></select>
+    <div class="field-row"><div><label data-i18n="sellingPrice">Selling price (฿)</label><input id="productPrice" class="field" type="number" min="0" step="0.01" required></div><div><label data-i18n="extraCost">Extra cost / unit (฿)</label><input id="productExtra" class="field" type="number" min="0" step="0.01" value="0"></div></div>
+    <div class="modal-actions"><button type="button" class="secondary-btn" data-close="productDialog" data-i18n="cancel">Cancel</button><button type="submit" class="primary-btn" data-i18n="saveProduct">Save product</button></div>
+  </form></dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
